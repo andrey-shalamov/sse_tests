@@ -37,12 +37,11 @@ void sse_add(const vec_type& a, const vec_type& b, vec_type& r)
     } 
 }
 
-template<typename... Args>
-__attribute__((__noinline__))
-void print_time(auto name, auto fn, Args... args)
+template<typename Func, typename... Args>
+void print_time(auto name, Func&& fn, Args&&... args)
 {
     auto t1 = std::chrono::steady_clock::now();
-    fn(args...);//(std::forward<Args>(args)...);
+    fn(std::forward<Args>(args)...);
     auto t2 = std::chrono::steady_clock::now();
     using duration = std::chrono::duration<double, std::milli>;
     auto d = duration(t2-t1).count();
@@ -57,7 +56,12 @@ void check(const auto& a, const auto& b)
 
 int main(int c, char** v)
 {
-    std::uint32_t n = std::stoi(v[1]);
+    if (c != 3)
+    {
+        std::cerr << "you must set 2 arguments." << std::endl;
+        return -1;
+    }
+    std::uint32_t n = std::stoi(v[1]) * sizeof(__m128i);
     std::uint32_t m = std::stoi(v[2]);
     
     std::vector<std::uint32_t> a(n);
@@ -76,6 +80,8 @@ int main(int c, char** v)
         print_time("simple add", simple_add, a, b, r1);
         print_time("sse add", sse_add, a, b, r2);
         --m;
+        
+        verify(0 == std::memcmp(r1.data(), r2.data(), n));
     }
     
     return 0;
