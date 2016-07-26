@@ -36,6 +36,9 @@ int main(int c, char** v)
     case 2:
         test::test_min(a, n, m);
         break;
+    case 3:
+        test::test_min_n(a, n, m);
+        break;
     default:
         std::cout << "There is no test with id " << test << std::endl;
     }

@@ -70,4 +70,26 @@ void test_min(const vec_type& a, std::uint32_t n, std::uint32_t m)
     }
 }
 
+void test_min_n(const vec_type& a, std::uint32_t n, std::uint32_t m)
+{    
+    auto sse_min_element_wrapper = [](const vec_type& v, value_type& r)
+    {
+        r = sse::min_element(v.data(), v.size());
+    };
+    auto wrapper = [&](std::uint32_t m, auto&& fn)
+    {
+        value_type r;
+        while (m > 0)
+        {
+            fn(a, r);
+            --m;
+        }
+        volatile auto v = r;
+        static_cast<void>(v);
+    };
+    print_time("simple_min_element", wrapper, m, simple_min_element);
+    print_time("std_min_element", wrapper, m, std_min_element);
+    print_time("sse_min_element", wrapper, m, sse_min_element_wrapper);
+}
+
 } // namespace test
