@@ -5,6 +5,7 @@
 
 #include "add.h"
 #include "min_element.h"
+#include "accumulate.h"
 
 //------------------------------------------------------------------------------
 
@@ -38,6 +39,11 @@ int main(int c, char** v)
         break;
     case 3:
         test::test_min_n(a, n, m);
+    case 4:
+        test::test_accumulate(a, m);
+        break;
+    case 5:
+        test::test_accumulate_n(a, m);
         break;
     default:
         std::cout << "There is no test with id " << test << std::endl;

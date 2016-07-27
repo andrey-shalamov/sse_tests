@@ -32,7 +32,7 @@ void print_time(auto name, Func&& fn, Args&&... args)
     fn(std::forward<Args>(args)...);
     auto t2 = std::chrono::steady_clock::now();
     using duration = std::chrono::duration<double, std::milli>;
-    auto d = duration(t2-t1).count();
+    volatile auto d = duration(t2-t1).count();
     std::cout << std::setw(10) << d  << " ms. - "<< name << std::endl;
 }
 
